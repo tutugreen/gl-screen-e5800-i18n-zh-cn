@@ -91,7 +91,7 @@ def tar_gz_control(control_text: str, script_files: list[Path] | None = None) ->
     ts = int(time.time())
     with tarfile.open(fileobj=buf, mode="w:gz", format=tarfile.GNU_FORMAT) as tar:
         data = control_text.encode("utf-8")
-        info = tarfile.TarInfo(name="./CONTROL")
+        info = tarfile.TarInfo(name="./control")
         info.size = len(data)
         info.mode = 0o644
         info.uid = info.gid = 0
