@@ -44,7 +44,7 @@ jobs:
       - name: Build ipk
         id: build
         run: |
-          VERSION=$(date -u +%Y-%m-%d-%H-%M-%S)
+          VERSION=$(date -u +%Y.%m.%d.%H%M%S)
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           python scripts/build_ipk.py --version "$VERSION"
 

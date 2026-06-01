@@ -202,7 +202,7 @@ def build_ipk(
                 shutil.rmtree(keep_pkg_root)
             shutil.copytree(pkg_root, keep_pkg_root)
 
-        subprocess.run([builder, "-o", "root", "-g", "root", str(pkg_root), str(out_dir)], check=True)
+        subprocess.run([builder, str(pkg_root), str(out_dir)], check=True)
 
     ipk_path = find_built_ipk(out_dir, package, version, architecture)
     installed_kb = (sum(path.stat().st_size for path in files) + 1023) // 1024
