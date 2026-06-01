@@ -178,8 +178,9 @@ def build_ipk(
     depends: str,
     keep_pkg_root: Path | None = None,
 ) -> Path:
-    if shutil.which("opkg-build") is None:
-        raise SystemExit("Missing opkg-build. Install opkg-utils (Ubuntu: sudo apt-get install opkg-utils).")
+    builder = shutil.which("opkg-build") or shutil.which("ipkg-build")
+    if builder is None:
+        raise SystemExit("Missing opkg-build/ipkg-build. Install or place OpenWrt scripts/ipkg-build in PATH.")
 
     out_dir.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="ipk-build-") as temp_name:
@@ -201,7 +202,7 @@ def build_ipk(
                 shutil.rmtree(keep_pkg_root)
             shutil.copytree(pkg_root, keep_pkg_root)
 
-        subprocess.run(["opkg-build", "-o", "root", "-g", "root", str(pkg_root), str(out_dir)], check=True)
+        subprocess.run([builder, "-o", "root", "-g", "root", str(pkg_root), str(out_dir)], check=True)
 
     ipk_path = find_built_ipk(out_dir, package, version, architecture)
     installed_kb = (sum(path.stat().st_size for path in files) + 1023) // 1024

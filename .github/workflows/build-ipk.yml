@@ -30,8 +30,9 @@ jobs:
 
       - name: Install deps
         run: |
-          sudo apt-get update
-          sudo apt-get install -y opkg-utils
+          curl -fsSL https://raw.githubusercontent.com/openwrt/openwrt/master/scripts/ipkg-build -o /tmp/ipkg-build
+          chmod +x /tmp/ipkg-build
+          sudo install -m 0755 /tmp/ipkg-build /usr/local/bin/ipkg-build
           pip install -r requirements.txt
 
       - name: Prepare overlay
