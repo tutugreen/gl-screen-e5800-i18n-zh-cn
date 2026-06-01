@@ -1,4 +1,12 @@
 #!/bin/sh
 [ "${IPKG_NO_SCRIPT}" = "1" ] && exit 0
+
+TEXT=/etc/gl_screen/language/text/default
+SRC=/etc/gl_screen/language/text/default.tutu-zh-cn
+
+if [ -f "$SRC" ]; then
+	cp "$SRC" "$TEXT"
+fi
+
 [ -x /etc/init.d/gl_screen ] && /etc/init.d/gl_screen restart
 exit 0

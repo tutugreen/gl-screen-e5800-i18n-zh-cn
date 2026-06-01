@@ -1,5 +1,5 @@
 #!/bin/sh
-# 在 opkg 覆盖 language/text/default 之前，备份当前文件（通常为原版英文）
+# 在 postinst 覆盖 language/text/default 之前，备份当前文件（通常为原版英文）
 [ "${IPKG_NO_SCRIPT}" = "1" ] && exit 0
 
 TEXT=/etc/gl_screen/language/text/default

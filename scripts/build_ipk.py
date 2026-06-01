@@ -18,6 +18,8 @@ ALLOWED_PREFIXES = (
     "etc/gl_screen/language/text/",
     "etc/gl_screen/language/ttf/",
 )
+LANG_DEFAULT_REL = Path("etc/gl_screen/language/text/default")
+LANG_PACKAGE_REL = Path("etc/gl_screen/language/text/default.tutu-zh-cn")
 
 DEFAULT_PACKAGE = "gl-screen-e5800-i18n-zh-cn"
 DEFAULT_MAINTAINER = "tutugreen <https://tutu.green>"
@@ -85,6 +87,8 @@ def write_text_lf(path: Path, text: str, mode: int) -> None:
 def copy_payload(overlay_root: Path, pkg_root: Path, files: list[Path]) -> None:
     for src in files:
         rel = src.relative_to(overlay_root)
+        if rel == LANG_DEFAULT_REL:
+            rel = LANG_PACKAGE_REL
         dest = pkg_root / rel
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dest)

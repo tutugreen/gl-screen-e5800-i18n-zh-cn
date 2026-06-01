@@ -1,5 +1,5 @@
 #!/bin/sh
-# opkg 会先删除包内文件（含中文版 default），再在 postrm 从备份还原英文
+# opkg 会先删除包内文件，再在 postrm 从备份还原英文 default
 [ "${IPKG_NO_SCRIPT}" = "1" ] && exit 0
 
 TEXT=/etc/gl_screen/language/text/default
