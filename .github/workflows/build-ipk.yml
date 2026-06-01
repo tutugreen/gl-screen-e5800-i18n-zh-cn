@@ -29,7 +29,10 @@ jobs:
           key: ibm-plex-sans-sc-${{ env.IBM_PLEX_SC_TAG }}
 
       - name: Install deps
-        run: pip install -r requirements.txt
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y opkg-utils
+          pip install -r requirements.txt
 
       - name: Prepare overlay
         run: python scripts/prepare_overlay.py
