@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - ".github/**"
+      - "README.md"
+      - "RELEASE_CHECKLIST.md"
   pull_request:
     branches:
       - main
@@ -15,6 +19,9 @@ permissions:
 env:
   IBM_PLEX_SC_TAG: "@ibm/plex-sans-sc@1.1.0"
   OPENWRT_IPKG_BUILD_COMMIT: "07a5e432c83aa5c5b8ef21caf84fc1d051dfcadc"
+  TARGET_DEVICE: "GL-E5800"
+  TARGET_FIRMWARE: "4.10.0 build 1092 (release5)"
+  TARGET_OPENWRT: "23.05.4 r24012-d8dd03c46f"
 
 jobs:
   build:
@@ -80,8 +87,19 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ needs.build.outputs.version }}
         run: |
+          IPK_PATH=$(find dist -maxdepth 1 -name '*.ipk' -print -quit)
+          SCREEN_DEPENDS=$(tar -xOf "$IPK_PATH" ./control.tar.gz | tar -xzOf - ./control | sed -n 's/^Depends: //p')
+          {
+            echo "Automated IPK build for GL-E5800 screen zh-CN language pack."
+            echo
+            echo "## Compatibility"
+            echo "- Device: ${TARGET_DEVICE}"
+            echo "- GL.iNet firmware: ${TARGET_FIRMWARE}"
+            echo "- OpenWrt base: ${TARGET_OPENWRT}"
+            echo "- Original screen package: ${SCREEN_DEPENDS}"
+          } > /tmp/release-notes.md
           gh release create "v${VERSION}" dist/*.ipk \
             --repo "$GITHUB_REPOSITORY" \
             --title "gl-screen-e5800-i18n-zh-cn ${VERSION}" \
-            --notes "Automated IPK build for GL-E5800 screen zh-CN language pack." \
+            --notes-file /tmp/release-notes.md \
             --latest
