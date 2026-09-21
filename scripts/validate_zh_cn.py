@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """校验 zh_cn 与 en：行数/键名一致，且每行格式为 KEY "value" 单行。"""
+from collections import Counter
 import re
 import sys
 from pathlib import Path
@@ -7,6 +8,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 KEY_RE = re.compile(r'^([A-Za-z0-9_@]+)\s+(.+)$')
+PLACEHOLDER_RE = re.compile(r"%(?:\d+\$)?[-+0 #]*(?:\d+)?(?:\.\d+)?[a-zA-Z]")
 
 
 def parse_logical_lines(path: Path) -> list[tuple[int, str, str | None, str | None]]:
@@ -87,18 +89,22 @@ def main() -> None:
     en_keys = [extract_key_only(l) for l in en_lines]
     zh_keys = [extract_key_only(l) for l in zh_lines]
 
-    # 检测 zh 中跨行字符串（物理行数多于 en）
-    multiline_issues = []
-    for i, line in enumerate(zh_lines, 1):
-        if not line.strip() or line.startswith("//"):
-            continue
-        m = KEY_RE.match(line)
-        if m and m.group(2).startswith('"') and not _quoted_value_complete(line):
-            multiline_issues.append(i)
-
-    print(f"zh_cn 未闭合引号/跨行条目起始行: {len(multiline_issues)}")
-    if multiline_issues:
-        print("  示例:", multiline_issues[:15])
+    malformed = {}
+    for name, lines in (("en", en_lines), ("zh_cn", zh_lines)):
+        issues = []
+        for i, line in enumerate(lines, 1):
+            if not line.strip() or line.startswith("//"):
+                continue
+            match = KEY_RE.match(line)
+            if not match or (
+                match.group(2).startswith('"') and not _quoted_value_complete(line)
+            ):
+                issues.append(i)
+        malformed[name] = issues
+        print(f"{name} 格式错误/跨行条目起始行: {len(issues)}")
+        if issues:
+            print("  示例:", issues[:15])
+            has_error = True
 
     # 按 en 的键序列对齐（仅非注释行）
     def key_sequence(keys):
@@ -128,11 +134,25 @@ def main() -> None:
     if len(en_lines) != len(zh_lines):
         print(f"ERROR: 物理行数不一致，差 {len(zh_lines) - len(en_lines)} 行（多为 \\n 被写成真实换行）")
         has_error = True
-    elif multiline_issues:
-        print("ERROR: zh_cn 存在未闭合引号/跨行条目")
+    elif not malformed["en"] and not malformed["zh_cn"]:
+        print("OK: 物理行数一致且无格式错误")
+
+    en_entries = [line for line in en_lines if extract_key_only(line) is not None]
+    zh_entries = [line for line in zh_lines if extract_key_only(line) is not None]
+    placeholder_issues = []
+    for en_line, zh_line in zip(en_entries, zh_entries):
+        en_key = extract_key_only(en_line)
+        en_placeholders = Counter(PLACEHOLDER_RE.findall(en_line))
+        zh_placeholders = Counter(PLACEHOLDER_RE.findall(zh_line))
+        if en_placeholders != zh_placeholders:
+            placeholder_issues.append((en_key, en_placeholders, zh_placeholders))
+    if placeholder_issues:
+        print(f"ERROR: 占位符不一致 {len(placeholder_issues)} 处")
+        for issue in placeholder_issues[:20]:
+            print(" ", issue)
         has_error = True
-    elif not multiline_issues:
-        print("OK: 物理行数一致且无跨行引号")
+    else:
+        print("OK: 所有格式化占位符一致")
 
     if has_error:
         raise SystemExit(1)

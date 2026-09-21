@@ -48,7 +48,7 @@ Requires the stock screen UI package (opkg will check this):
 
 | Package | Version |
 |---------|---------|
-| `gl-sdk4-screen-large` | `git-2026.142.39025-c3b9432-1` |
+| `gl-sdk4-screen-large` | `git-2026.237.10575-dd8a031-1` |
 
 ```sh
 opkg install gl-screen-e5800-i18n-zh-cn_<version>_all.ipk
