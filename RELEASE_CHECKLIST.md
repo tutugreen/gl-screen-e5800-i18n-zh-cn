@@ -14,7 +14,7 @@ Use this before the first public push. **Git root is this directory** (`gl-scree
 
 - [ ] `python scripts/validate_zh_cn.py` — keys match `sources/en`
 - [ ] GitHub Actions **Build IPK** (`workflow_dispatch`) succeeds
-- [ ] Device has `gl-sdk4-screen-large` at `git-2026.142.39025-c3b9432-1` (`opkg list-installed | grep screen`)
+- [ ] Device has `gl-sdk4-screen-large` at `git-2026.237.10575-dd8a031-1` (`opkg list-installed | grep screen`)
 - [ ] `opkg install` on GL-E5800 — no `Malformed package file`; wrong firmware should be **rejected by Depends**
 - [ ] UI Chinese text and fonts look correct
 - [ ] `opkg remove` restores English `text/default`
