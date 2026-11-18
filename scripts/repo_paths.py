@@ -38,4 +38,4 @@ def overlay_font_basename(stem: str) -> str:
 
 
 # Stock GL screen UI package on GL-E5800 (opkg Depends)
-DEPENDS_GL_SCREEN_SDK = "gl-sdk4-screen-large (= git-2026.237.10575-dd8a031-1)"
+DEPENDS_GL_SCREEN_SDK = "gl-sdk4-screen-large (= git-2026.289.31233-a105142-1)"
