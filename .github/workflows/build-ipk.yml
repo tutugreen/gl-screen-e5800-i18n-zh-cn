@@ -20,7 +20,7 @@ env:
   IBM_PLEX_SC_TAG: "@ibm/plex-sans-sc@1.1.0"
   OPENWRT_IPKG_BUILD_COMMIT: "07a5e432c83aa5c5b8ef21caf84fc1d051dfcadc"
   TARGET_DEVICE: "GL-E5800"
-  TARGET_FIRMWARE: "4.10.0 build 1092 (release5)"
+  TARGET_FIRMWARE: "4.10.2 build 1105 (release2)"
   TARGET_OPENWRT: "23.05.4 r24012-d8dd03c46f"
 
 jobs:
