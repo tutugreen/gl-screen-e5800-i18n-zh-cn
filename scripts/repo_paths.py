@@ -19,6 +19,8 @@ ASSETS_DEVICE_ORIGINAL = ASSETS_DIR / "device-original-ttf"
 
 # Overlay TTF: IBM Plex Sans SC (downloaded in CI) + metrics from config/
 FONT_OVERLAY_SUFFIX = "_tutu_zh-cn.ttf"
+PRINTABLE_ASCII = range(0x20, 0x7F)
+PROPORTIONAL_FONT_STEMS = ("default_medium", "default_semibold", "default_bold")
 
 FONT_STEMS = (
     "default_medium",

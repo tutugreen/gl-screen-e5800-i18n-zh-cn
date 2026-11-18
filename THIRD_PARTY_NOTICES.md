@@ -6,7 +6,7 @@
 - **License:** [SIL Open Font License 1.1](https://scripts.sil.org/OFL)
 - **In the ipk:** `etc/gl_screen/language/ttf/license.txt` is copied from the IBM package at build time.
 
-Redistributed font binaries (`*_tutu_zh-cn.ttf`) are produced in CI/local tooling from IBM Plex Sans SC with adjusted vertical metrics only. They are **not** committed to this repository.
+Redistributed font binaries (`*_tutu_zh-cn.ttf`) are produced in CI/local tooling from IBM Plex Sans SC with adjusted vertical metrics and printable ASCII advance widths for Medium, Semibold, and Bold. They are **not** committed to this repository.
 
 The ipk includes IBM’s `license.txt` (SIL OFL 1.1) under `etc/gl_screen/language/ttf/`.
 
@@ -22,4 +22,4 @@ Chinese translations in `sources/zh_cn` are contributed under the same [MIT Lice
 
 ## Stock device font metrics (`config/device-font-metrics.json`)
 
-Numeric vertical metrics were measured from stock TTF files shipped on a GL-E5800 device. Only metrics are stored in git (not the original font binaries).
+Numeric vertical metrics and proportional ASCII advances were measured from stock TTF files shipped on a GL-E5800 device. Only metrics are stored in git (not the original font binaries).

@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from fontTools.ttLib import TTFont
 
-from repo_paths import ASSETS_DEVICE_ORIGINAL, REPO_ROOT
+from repo_paths import ASSETS_DEVICE_ORIGINAL, PRINTABLE_ASCII, PROPORTIONAL_FONT_STEMS, REPO_ROOT
 
 OUT = REPO_ROOT / "config" / "device-font-metrics.json"
 KEYS = (
@@ -22,10 +22,10 @@ KEYS = (
 )
 
 
-def metrics_from_ttf(path: Path) -> dict[str, int]:
+def metrics_from_ttf(path: Path) -> dict[str, int | list[int]]:
     f = TTFont(path)
     h = f["hhea"]
-    m: dict[str, int] = {
+    m: dict[str, int | list[int]] = {
         "ascent": int(h.ascent),
         "descent": int(h.descent),
         "lineGap": int(h.lineGap),
@@ -41,6 +41,11 @@ def metrics_from_ttf(path: Path) -> dict[str, int]:
         ):
             if hasattr(o, key):
                 m[key] = int(getattr(o, key))
+    if path.stem in PROPORTIONAL_FONT_STEMS:
+        cmap = f.getBestCmap()
+        m["unitsPerEm"] = f["head"].unitsPerEm
+        m["asciiAdvanceWidths"] = [f["hmtx"][cmap[codepoint]][0] for codepoint in PRINTABLE_ASCII]
+    f.close()
     return m
 
 
@@ -60,7 +65,7 @@ def main() -> None:
         raise SystemExit(f"Directory not found: {args.device_font_dir}")
 
     out: dict[str, object] = {
-        "_comment": "Vertical metrics from stock GL-E5800 language/ttf (see THIRD_PARTY_NOTICES.md)",
+        "_comment": "Stock GL-E5800 vertical metrics and proportional ASCII advances (U+0020 through U+007E)",
     }
     for name in KEYS:
         fp = args.device_font_dir / name
